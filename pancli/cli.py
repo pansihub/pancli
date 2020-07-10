@@ -13,6 +13,8 @@ def main(argv = None):
     command = None
     if args.command == 'package':
         command = PackageCommand()
+    else:
+        print(f"Invalid command {args.command}")
     
     if command:
         command.run(argv)
