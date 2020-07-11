@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pancli',
-    version='0.0.2',
+    version='0.0.3',
     author='kevenli',
     author_email='pbleester@gmail.com',
     url='https://github.com/pansihub/pancli',
