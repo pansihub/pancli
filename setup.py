@@ -2,13 +2,14 @@ import os
 import io
 from setuptools import setup, find_packages
 
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+
 setup(
     name='pancli',
-    version='0.0.1',
+    version='0.0.2',
     author='kevenli',
     author_email='pbleester@gmail.com',
     url='https://github.com/pansihub/pancli',
+    packages=find_packages(),
     description='pansihub command-line tools.',
     entry_points={
         'console_scripts': [
