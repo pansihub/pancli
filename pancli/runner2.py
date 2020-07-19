@@ -75,7 +75,7 @@ class SpiderSetting(object):
         """
         type: (cls, dict) -> SpiderSetting
         """
-        spider_name = dic['spider_name']
+        spider_name = dic.get('spider_name') or dic.get('spider')
         project_name = dic.get('project_name')
         extra_requirements = dic.get('extra_requirements')
         spider_parameters = dic.get('spider_parameters')
@@ -94,6 +94,9 @@ class SpiderSetting(object):
         with open(file_path, 'r') as f:
             json_content = f.read()
             return SpiderSetting.from_json(json_content)
+
+
+empty_settings = SpiderSetting.from_dict({})
 
 
 def randomString(stringLength=10):
