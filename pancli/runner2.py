@@ -49,7 +49,7 @@ class SpiderSetting(object):
         self.project_name = project_name
         self.base_settings_module = base_settings_module
         self.output_file = output_file
-        self.plugin_settings = plugin_settings
+        self.plugin_settings = plugin_settings or {}
 
 
     def to_json(self):
