@@ -1,8 +1,12 @@
 import sys
 import argparse
 from pancli.commands.package import PackageCommand
+from pancli.commands.crawl import CrawlCommand
 
-cmds = {'package': PackageCommand()}
+cmds = {
+    'package': PackageCommand(),
+    'crawl': CrawlCommand()
+}
 
 
 def _pop_command_name(argv):
@@ -39,3 +43,7 @@ def main(argv = None):
     parser.usage = f'pansi {command}'
     args = parser.parse_args()
     cmd.run(args)
+
+
+if __name__ == '__main__':
+    main()
