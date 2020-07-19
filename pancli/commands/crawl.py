@@ -4,6 +4,7 @@ class CrawlCommand(CommandBase):
     def add_arguments(self, parser):
         parser.add_argument('spider', nargs='?')
         parser.add_argument('--package')
+        parser.add_argument('-s', '--set', nargs='*', dest='setting_set')
 
     def run(self, args):
         from ..runner import activate_project, execute
@@ -12,4 +13,8 @@ class CrawlCommand(CommandBase):
         spider_name = args.spider
         if not spider_name:
             print('no spider name spicified')
-        execute(argv=['scrapy', 'crawl', spider_name], settings=settings)
+        argv = argv=['scrapy', 'crawl', spider_name]
+        for setting_arg in args.setting_set:
+            setting_k, setting_v = setting_arg.split('=', 1)
+            argv += ['-s', '%s=%s' % (setting_k, setting_v)]
+        execute(argv, settings=settings)
