@@ -2,23 +2,40 @@ import sys
 import argparse
 from pancli.commands.package import PackageCommand
 
+cmds = {'package': PackageCommand()}
+
+
+def _pop_command_name(argv):
+    i = 0
+    for arg in argv[1:]:
+        if not arg.startswith('-'):
+            del argv[i]
+            return arg
+        i += 1
+
+
 def main(argv = None):
     if argv is None:
         argv = sys.argv
     
     parser = argparse.ArgumentParser('')
-    parser.add_argument('command', help='available commands: package')
-    args = parser.parse_args()
-    print(args.command)
-    command = None
-    if args.command == 'package':
-        command = PackageCommand()
-    else:
-        print(f"Invalid command {args.command}")
     
-    if command:
-        command.run(argv)
-    else:
-        parser.print_help()
-        
+    command = _pop_command_name(argv)
 
+    if not command:
+        print('Please specify command.')
+        print('Available commands:')
+        for available_command in cmds.keys():
+            print('    ' + available_command)
+        sys.exit(1)
+
+    try:
+        cmd = cmds[command]
+    except KeyError:
+        print(f"Invalid command {command}")
+        sys.exit(1)
+    
+    cmd.add_arguments(parser)
+    parser.usage = f'pansi {command}'
+    args = parser.parse_args()
+    cmd.run(args)

@@ -1,7 +1,10 @@
 import os
 import sys
 import glob
+import argparse
+import shutil
 from subprocess import check_call
+from . import CommandBase
 
 _SETUP_PY_TEMPLATE = """
 # Automatically created by: scrapydd
@@ -16,7 +19,7 @@ setup(
 """.lstrip()
 
 
-class PackageCommand():
+class PackageCommand(CommandBase):
     def _create_default_setup_py(self, **kwargs):
         with open('setup.py', 'w') as f:
             f.write(_SETUP_PY_TEMPLATE % kwargs)
@@ -37,8 +40,14 @@ class PackageCommand():
         egg = glob.glob(os.path.join(d, '*.egg'))[0]
         return egg, d
 
-    def run(self, argv=None):
+    def add_arguments(self, parser: argparse.ArgumentParser):
+        parser.add_argument('-o', '--output')
+
+
+    def run(self, args=None):
         from scrapy.utils.python import retry_on_eintr
         from scrapy.utils.conf import get_config, closest_scrapy_cfg
         egg, d = self._build_egg()
+        if args.output:
+            shutil.copy(egg, args.output)
         print("Egg has been built: %s" % egg)
