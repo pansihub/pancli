@@ -18,11 +18,14 @@ class CrawlCommand(CommandBase):
         from ..runner import activate_project, execute
         from ..runner2 import empty_settings, SpiderSetting
         from ..plugin import perform, _pip_installer, load_plugin, _pip_install
-        package = args.package
-        project_settings = activate_project(package)
+
         spec = empty_settings
         if args.file:
             spec = SpiderSetting.from_file(args.file)
+
+        package = spec.package or args.package
+        project_settings = activate_project(package)
+        
         spider_name = args.spider or spec.spider_name
         if not spider_name:
             print('No spider name specified.')

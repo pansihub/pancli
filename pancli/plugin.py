@@ -195,6 +195,7 @@ def load_plugin(plugin_name):
             'scrapy.plugin', plugin_name))
     except StopIteration:
         raise Exception('Plugin %s not found.' % plugin_name)
+    _activate_distribution(entry_point.dist)
     plugin_name = entry_point.name
     plugin_cls = entry_point.load()
     plugin = plugin_cls()

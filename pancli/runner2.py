@@ -51,6 +51,7 @@ class SpiderSetting(object):
         self.output_file = output_file
         self.plugin_settings = plugin_settings or {}
         self.plugins = kwargs.get('plugins') or []
+        self.package = kwargs.get('package')
 
     def to_json(self):
         d = {
@@ -89,7 +90,8 @@ class SpiderSetting(object):
                    base_settings_module=base_settings_module,
                    output_file=output_file,
                    plugin_settings=plugin_settings,
-                   plugins=dic.get('plugins'))
+                   plugins=dic.get('plugins'), 
+                   package=dic.get('package'))
 
     @classmethod
     def from_file(cls, file_path):
