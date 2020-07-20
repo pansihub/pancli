@@ -104,7 +104,7 @@ class SpiderSetting(object):
     @classmethod
     def from_yaml(cls, file_path):
         with open(file_path, 'r') as f:
-            dic = yaml.load(f)
+            dic = yaml.safe_load(f)
             return SpiderSetting.from_dict(dic)
 
 empty_settings = SpiderSetting.from_dict({})
