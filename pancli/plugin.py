@@ -33,16 +33,18 @@ import argparse
 plugin_env = pkg_resources.Environment([os.path.abspath('./plugins')])
 
 
-def _pip_install(requirement):
-    print('installing requirement %s' % requirement)
+def _pip_install(*requirements):
+    print('installing requirements %s' % requirements)
     pargs = [sys.executable, '-m', 'pip', '--disable-pip-version-check',
              'install']
     env = os.environ.copy()
-    pargs.append(requirement)
+    pargs.extend(requirements)
     p = subprocess.Popen(pargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                          env=env,
                          encoding='UTF8')
     try:
+        #p.communicate(timeout=60)
+        #ret = p.returncode
         ret = p.wait(timeout=60)
         output = p.stdout.read()
         err_output = p.stderr.read()

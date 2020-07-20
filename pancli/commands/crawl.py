@@ -1,6 +1,7 @@
 import sys
 from . import CommandBase
 
+
 class CrawlCommand(CommandBase):
     def add_arguments(self, parser):
         parser.add_argument('spider', nargs='?')
@@ -11,11 +12,12 @@ class CrawlCommand(CommandBase):
         parser.add_argument('--logfile')
         parser.add_argument('--ps', '--plugin-setting', nargs='*', dest='plugin_settings')
         parser.add_argument('--loglevel')
+        parser.add_argument('--plugin', nargs='*', dest='plugins')
 
     def run(self, args):
         from ..runner import activate_project, execute
         from ..runner2 import empty_settings, SpiderSetting
-        from ..plugin import perform, _pip_installer, load_plugin
+        from ..plugin import perform, _pip_installer, load_plugin, _pip_install
         package = args.package
         project_settings = activate_project(package)
         spec = empty_settings
@@ -35,6 +37,14 @@ class CrawlCommand(CommandBase):
             argv += ['--logfile', args.logfile]
         if args.loglevel:
             argv += ['--loglevel', args.loglevel]
+
+        
+        # install derective plugins
+        plugins_requires = spec.plugins
+        if args.plugins:
+            plugins_requires.extend(args.plugins)
+        for plugin in plugins_requires:
+            _pip_install(plugin)
 
         plugins_settings = spec.plugin_settings
         for plugin_setting in args.plugin_settings or []:

@@ -39,7 +39,7 @@ class SpiderSetting(object):
     def __init__(self, spider_name, extra_requirements=None, spider_parameters=None, project_name=None,
                  base_settings_module=None,
                  output_file=None,
-                 plugin_settings=None):
+                 plugin_settings=None, **kwargs):
         self.spider_name = spider_name
         if extra_requirements and isinstance(extra_requirements, str):
             extra_requirements = [x for x in
@@ -50,7 +50,7 @@ class SpiderSetting(object):
         self.base_settings_module = base_settings_module
         self.output_file = output_file
         self.plugin_settings = plugin_settings or {}
-
+        self.plugins = kwargs.get('plugins') or []
 
     def to_json(self):
         d = {
@@ -83,11 +83,13 @@ class SpiderSetting(object):
         output_file = dic.get('output_file')
         plugin_settings = dic.get('plugin_settings')
 
+
         return cls(spider_name, extra_requirements, spider_parameters,
                    project_name,
                    base_settings_module=base_settings_module,
                    output_file=output_file,
-                   plugin_settings=plugin_settings)
+                   plugin_settings=plugin_settings,
+                   plugins=dic.get('plugins'))
 
     @classmethod
     def from_file(cls, file_path):
