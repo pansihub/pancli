@@ -2,10 +2,12 @@ import sys
 import argparse
 from pancli.commands.package import PackageCommand
 from pancli.commands.crawl import CrawlCommand
+from pancli.commands.plugin import PluginCommand
 
 cmds = {
     'package': PackageCommand(),
-    'crawl': CrawlCommand()
+    'crawl': CrawlCommand(),
+    'plugin': PluginCommand()
 }
 
 
