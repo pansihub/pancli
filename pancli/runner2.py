@@ -95,10 +95,17 @@ class SpiderSetting(object):
 
     @classmethod
     def from_file(cls, file_path):
+        if os.path.splitext(file_path)[-1].lower() in ('.yaml', '.yml'):
+            return SpiderSetting.from_yaml(file_path)
         with open(file_path, 'r') as f:
             json_content = f.read()
             return SpiderSetting.from_json(json_content)
 
+    @classmethod
+    def from_yaml(cls, file_path):
+        with open(file_path, 'r') as f:
+            dic = yaml.load(f)
+            return SpiderSetting.from_dict(dic)
 
 empty_settings = SpiderSetting.from_dict({})
 
