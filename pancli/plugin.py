@@ -33,6 +33,29 @@ import argparse
 plugin_env = pkg_resources.Environment([os.path.abspath('./plugins')])
 
 
+def _pip_install(requirement):
+    print('installing requirement %s' % requirement)
+    pargs = [sys.executable, '-m', 'pip', '--disable-pip-version-check',
+             'install']
+    env = os.environ.copy()
+    pargs.append(requirement)
+    p = subprocess.Popen(pargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                         env=env,
+                         encoding='UTF8')
+    try:
+        ret = p.wait(timeout=60)
+        output = p.stdout.read()
+        err_output = p.stderr.read()
+        if ret != 0:
+            sys.stderr.write('Pip install error\n')
+            sys.stderr.write(err_output)
+            return ret
+
+    except subprocess.TimeoutExpired:
+        sys.stderr.write('pip install process timeout.')
+        return None
+
+
 def _pip_installer(requirement):
     print('installing requirement %s' % requirement)
     if isinstance(requirement, str):
@@ -236,7 +259,7 @@ def list_():
     load_plugins()
     for entry_point in pkg_resources.iter_entry_points(
                                                 'scrapy.plugin'):
-        print(entry_point.name)
+        print(f'{entry_point.name} ({entry_point.dist.project_name}, {entry_point.dist.version})')
 
 
 def main():

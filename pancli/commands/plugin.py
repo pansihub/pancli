@@ -1,5 +1,5 @@
 from . import CommandBase
-from ..plugin import list_, _pip_installer
+from ..plugin import list_, _pip_install
 
 class PluginCommand(CommandBase):
     def add_arguments(self, parser):
@@ -15,4 +15,4 @@ class PluginCommand(CommandBase):
         if args.subcommand == 'list':
             return list_()
         if args.subcommand == 'install':
-            return _pip_installer(args.url_or_path)
+            return _pip_install(args.url_or_path)
