@@ -23,7 +23,7 @@ class CrawlCommand(CommandBase):
         if args.file:
             spec = SpiderSetting.from_file(args.file)
 
-        package = spec.package or args.package
+        package = args.package or spec.package
         project_settings = activate_project(package)
         
         spider_name = args.spider or spec.spider_name

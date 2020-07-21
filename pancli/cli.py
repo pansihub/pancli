@@ -3,11 +3,13 @@ import argparse
 from pancli.commands.package import PackageCommand
 from pancli.commands.crawl import CrawlCommand
 from pancli.commands.plugin import PluginCommand
+from pancli.commands.list import ListCommand
 
 cmds = {
     'package': PackageCommand(),
     'crawl': CrawlCommand(),
-    'plugin': PluginCommand()
+    'plugin': PluginCommand(),
+    'list': ListCommand()
 }
 
 
