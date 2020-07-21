@@ -8,6 +8,7 @@ class CrawlCommand(CommandBase):
         parser.add_argument('--package')
         parser.add_argument('-s', '--set', nargs='*', dest='setting_set')
         parser.add_argument('-o', '--output')
+        parser.add_argument('--output-format', '-t', dest='format')
         parser.add_argument('-f', '--file')
         parser.add_argument('--logfile')
         parser.add_argument('--ps', '--plugin-setting', nargs='*', dest='plugin_settings')
@@ -25,6 +26,8 @@ class CrawlCommand(CommandBase):
 
         package = args.package or spec.package
         project_settings = activate_project(package)
+
+        output_format = args.format
         
         spider_name = args.spider or spec.spider_name
         if not spider_name:
@@ -36,6 +39,8 @@ class CrawlCommand(CommandBase):
             argv += ['-s', '%s=%s' % (setting_k, setting_v)]
         if args.output:
             argv += ['-o', args.output]
+        if output_format:
+            argv += ['-t', output_format]
         if args.logfile:
             argv += ['--logfile', args.logfile]
         if args.loglevel:
