@@ -1,0 +1,9 @@
+.venv
+.vscode
+build
+dist
+package
+*.egg-info
+.gitignore
+.git
+.vagrant
