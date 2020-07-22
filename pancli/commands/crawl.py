@@ -28,6 +28,7 @@ class CrawlCommand(CommandBase):
         project_settings = activate_project(package)
 
         output_format = args.format
+        output = args.output or spec.output
         
         spider_name = args.spider or spec.spider_name
         if not spider_name:
@@ -37,8 +38,9 @@ class CrawlCommand(CommandBase):
         for setting_arg in args.setting_set or []:
             setting_k, setting_v = setting_arg.split('=', 1)
             argv += ['-s', '%s=%s' % (setting_k, setting_v)]
-        if args.output:
-            argv += ['-o', args.output]
+        
+        if output:
+            argv += ['-o', output]
         if output_format:
             argv += ['-t', output_format]
         if args.logfile:

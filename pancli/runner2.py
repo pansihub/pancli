@@ -33,12 +33,12 @@ class SpiderSetting(object):
     extra_requirements = None
     spider_parameters = None
     base_settings_module = None
-    output_file = None
+    output = None
     egg_path = None
 
     def __init__(self, spider_name, extra_requirements=None, spider_parameters=None, project_name=None,
                  base_settings_module=None,
-                 output_file=None,
+                 output=None,
                  plugin_settings=None, **kwargs):
         self.spider_name = spider_name
         if extra_requirements and isinstance(extra_requirements, str):
@@ -48,7 +48,7 @@ class SpiderSetting(object):
         self.spider_parameters = spider_parameters or {}
         self.project_name = project_name
         self.base_settings_module = base_settings_module
-        self.output_file = output_file
+        self.output = output
         self.plugin_settings = plugin_settings or {}
         self.plugins = kwargs.get('plugins') or []
         self.package = kwargs.get('package')
@@ -62,8 +62,8 @@ class SpiderSetting(object):
             'base_settings_module': self.base_settings_module,
             'plugin_settings': self.plugin_settings,
         }
-        if self.output_file:
-            d['output_file'] = self.output_file
+        if self.output:
+            d['output'] = self.output
         return json.dumps(d)
 
     @classmethod
@@ -81,14 +81,14 @@ class SpiderSetting(object):
         extra_requirements = dic.get('extra_requirements')
         spider_parameters = dic.get('spider_parameters')
         base_settings_module = dic.get('base_settings_module')
-        output_file = dic.get('output_file')
+        output = dic.get('output')
         plugin_settings = dic.get('plugin_settings')
 
 
         return cls(spider_name, extra_requirements, spider_parameters,
                    project_name,
                    base_settings_module=base_settings_module,
-                   output_file=output_file,
+                   output=output,
                    plugin_settings=plugin_settings,
                    plugins=dic.get('plugins'), 
                    package=dic.get('package'))
@@ -144,7 +144,7 @@ def main():
     spider_setting = SpiderSetting.from_dict(dic)
     #plugin_settings = spider_setting.plugin_settings
     extra_requirements = spider_setting.extra_requirements
-    output_file = spider_setting.output_file or 'items.jl'
+    output_file = spider_setting.output or 'items.jl'
     if extra_requirements:
         for requirement in extra_requirements:
             _pip_installer(requirement)

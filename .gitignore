@@ -131,3 +131,6 @@ dmypy.json
 
 spider.json
 /*.yaml
+.vagrant
+*.jl
+Vagrantfile
