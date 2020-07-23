@@ -24,4 +24,7 @@ setup(
             'pancli = pancli.cli:main',
         ]
     },
+    install_requires=[
+        'pyaml'
+    ]
 )
