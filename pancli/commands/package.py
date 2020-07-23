@@ -3,6 +3,7 @@ import sys
 import glob
 import argparse
 import shutil
+import tempfile
 from subprocess import check_call
 from . import CommandBase
 
@@ -24,7 +25,7 @@ class PackageCommand(CommandBase):
         with open('setup.py', 'w') as f:
             f.write(_SETUP_PY_TEMPLATE % kwargs)
 
-    def _build_egg(self):
+    def _build_egg(self, dist_dir=None):
         from scrapy.utils.python import retry_on_eintr
         from scrapy.utils.conf import get_config, closest_scrapy_cfg
         closest = closest_scrapy_cfg()
@@ -34,7 +35,7 @@ class PackageCommand(CommandBase):
             settings = scrapy_project_settings.get('settings', 'default')
             project = scrapy_project_settings.get('deploy', 'project')
             self._create_default_setup_py(settings=settings, project=project)
-        d = 'dist'
+        d = dist_dir or 'dist'
         retry_on_eintr(check_call, [sys.executable, 'setup.py', 'clean', '-a', 'bdist_egg', '-d', d],
                     stdout=sys.stdout, stderr=sys.stderr)
         egg = glob.glob(os.path.join(d, '*.egg'))[0]
@@ -47,7 +48,16 @@ class PackageCommand(CommandBase):
     def run(self, args=None):
         from scrapy.utils.python import retry_on_eintr
         from scrapy.utils.conf import get_config, closest_scrapy_cfg
-        egg, d = self._build_egg()
+
+        output_dir = None
         if args.output:
-            shutil.copy(egg, args.output)
+            output_dir = tempfile.mkdtemp('pancli_pac')
+        try:
+            egg, d = self._build_egg(dist_dir=output_dir)
+            if args.output:
+                shutil.copy(egg, args.output)
+        finally:
+            if output_dir and os.path.exists(output_dir):
+                shutil.rmtree(output_dir)
+        
         print("Egg has been built: %s" % egg)
