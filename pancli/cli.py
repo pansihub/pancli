@@ -4,6 +4,7 @@ from pancli.commands.package import PackageCommand
 from pancli.commands.crawl import CrawlCommand
 from pancli.commands.plugin import PluginCommand
 from pancli.commands.list import ListCommand
+from pancli import __version__ as version
 
 cmds = {
     'package': PackageCommand(),
@@ -25,16 +26,26 @@ def _pop_command_name(argv):
 def main(argv = None):
     if argv is None:
         argv = sys.argv
+
+    usage = '%(prog)s command\r\n'
+    usage += 'Available commands: \r\n'
+    for available_command in cmds.keys():
+        usage += '\t%s\r\n' % available_command
     
-    parser = argparse.ArgumentParser('')
+    parser = argparse.ArgumentParser('pancli', usage=usage)
+    parser.add_argument('-V', '--version', action='version', default=False,
+                    version='%(prog)s {version}'.format(version=version))
     
     command = _pop_command_name(argv)
 
-    if not command:
+    if command is None:
+        ops = parser.parse_args()
+        if not command and ops.version:
+            print('pancli %s' % version)
+            sys.exit(0)
+
         print('Please specify command.')
-        print('Available commands:')
-        for available_command in cmds.keys():
-            print('    ' + available_command)
+        parser.print_help()
         sys.exit(1)
 
     try:
