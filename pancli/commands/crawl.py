@@ -35,9 +35,13 @@ class CrawlCommand(CommandBase):
             print('No spider name specified.')
             sys.exit(1)
         argv = argv=['scrapy', 'crawl', spider_name]
+
+        for setting_k, setting_v in spec.spider_parameters.items():
+            project_settings.set(setting_k, setting_v)
+
         for setting_arg in args.setting_set or []:
             setting_k, setting_v = setting_arg.split('=', 1)
-            argv += ['-s', '%s=%s' % (setting_k, setting_v)]
+            project_settings.set(setting_k, setting_v)
         
         if output:
             argv += ['-o', output]
