@@ -58,7 +58,7 @@ class SpiderSetting(object):
             'spider_name': self.spider_name,
             'project_name': self.project_name,
             'extra_requirements': self.extra_requirements,
-            'spider_parameters': self.spider_parameters,
+            'settings': self.spider_parameters,
             'base_settings_module': self.base_settings_module,
             'plugin_settings': self.plugin_settings,
         }
