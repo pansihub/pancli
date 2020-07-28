@@ -79,7 +79,7 @@ class SpiderSetting(object):
         spider_name = dic.get('spider_name') or dic.get('spider')
         project_name = dic.get('project_name')
         extra_requirements = dic.get('extra_requirements')
-        spider_parameters = dic.get('spider_parameters')
+        spider_parameters = dic.get('settings') or dic.get('spider_parameters')
         base_settings_module = dic.get('base_settings_module')
         output = dic.get('output')
         plugin_settings = dic.get('plugin_settings')
