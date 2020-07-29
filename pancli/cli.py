@@ -4,13 +4,15 @@ from pancli.commands.package import PackageCommand
 from pancli.commands.crawl import CrawlCommand
 from pancli.commands.plugin import PluginCommand
 from pancli.commands.list import ListCommand
+from pancli.commands.settings import SettingsCommand
 from pancli import __version__ as version
 
 cmds = {
     'package': PackageCommand(),
     'crawl': CrawlCommand(),
     'plugin': PluginCommand(),
-    'list': ListCommand()
+    'list': ListCommand(),
+    'settings': SettingsCommand()
 }
 
 
