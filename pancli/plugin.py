@@ -59,44 +59,6 @@ def _pip_install(*requirements):
         return None
 
 
-def _plugin_installer(requirement):
-    plugin_folder = os.path.abspath('./.plugins')
-    if not os.path.exists(plugin_folder):
-        os.makedirs(plugin_folder)
-
-    print('installing requirement %s' % requirement)
-    if isinstance(requirement, str):
-        requirement = pkg_resources.Requirement(requirement)
-    pargs = [sys.executable, '-m', 'pip', '--disable-pip-version-check',
-             'install', str(requirement), 
-             #'--target', plugin_folder
-             ]
-    env = os.environ.copy()
-    p = subprocess.Popen(pargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                         env=env,
-                         encoding='UTF8')
-    try:
-        ret = p.wait(timeout=60)
-        output = p.stdout.read()
-        err_output = p.stderr.read()
-        new_env = pkg_resources.Environment(plugin_folder)
-        new_env.scan()
-        dists = new_env[requirement.name]
-        if ret != 0:
-            sys.stderr.write('Pip install error\n')
-            sys.stderr.write(err_output)
-        #dist = pkg_resources.get_distribution(requirement)
-        if dists:
-            print('%s installed' % dists)
-            sys.stdout.flush()
-            return dists[0]
-        else:
-            print('dist not find')
-            return None
-    except subprocess.TimeoutExpired:
-        sys.stderr.write('pip install process timeout.')
-        return None
-
 def _pip_installer(requirement):
     print('installing requirement %s' % requirement)
     if isinstance(requirement, str):
