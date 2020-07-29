@@ -18,7 +18,7 @@ class CrawlCommand(CommandBase):
     def run(self, args):
         from ..runner import activate_project, execute
         from ..runner2 import empty_settings, SpiderSetting
-        from ..plugin import perform, _pip_installer, load_plugin, _pip_install
+        from ..plugin import perform, _pip_installer, load_plugin, _pip_install, _activate_distribution, install_plugin, load_plugins
 
         spec = empty_settings
         if args.file:
@@ -58,7 +58,11 @@ class CrawlCommand(CommandBase):
         if args.plugins:
             plugins_requires.extend(args.plugins)
         for plugin in plugins_requires:
-            _pip_install(plugin)
+            #dist = _pip_installer(plugin)
+            #_activate_distribution(dist)
+            install_plugin(plugin).activate()
+            #_pip_install(plugin)
+        load_plugins()
 
         plugins_settings = spec.plugin_settings
         for plugin_setting in args.plugin_settings or []:
