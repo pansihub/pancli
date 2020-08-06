@@ -20,11 +20,12 @@ setup(
 """.lstrip()
 
 
-class PackageCommand(CommandBase):
-    def _create_default_setup_py(self, **kwargs):
-        with open('setup.py', 'w') as f:
-            f.write(_SETUP_PY_TEMPLATE % kwargs)
+def _create_default_setup_py(**kwargs):
+    with open('setup.py', 'w') as f:
+        f.write(_SETUP_PY_TEMPLATE % kwargs)
 
+
+class PackageCommand(CommandBase):
     def _build_egg(self, dist_dir=None):
         from scrapy.utils.python import retry_on_eintr
         from scrapy.utils.conf import get_config, closest_scrapy_cfg
@@ -34,7 +35,7 @@ class PackageCommand(CommandBase):
             scrapy_project_settings = get_config()
             settings = scrapy_project_settings.get('settings', 'default')
             project = scrapy_project_settings.get('deploy', 'project')
-            self._create_default_setup_py(settings=settings, project=project)
+            _create_default_setup_py(settings=settings, project=project)
         d = dist_dir or 'dist'
         retry_on_eintr(check_call, [sys.executable, 'setup.py', 'clean', '-a', 'bdist_egg', '-d', d],
                     stdout=sys.stdout, stderr=sys.stderr)

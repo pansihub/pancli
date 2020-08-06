@@ -5,6 +5,7 @@ from pancli.commands.crawl import CrawlCommand
 from pancli.commands.plugin import PluginCommand
 from pancli.commands.list import ListCommand
 from pancli.commands.settings import SettingsCommand
+from pancli.commands.deploy import DeployCommand
 from pancli import __version__ as version
 
 cmds = {
@@ -12,7 +13,8 @@ cmds = {
     'crawl': CrawlCommand(),
     'plugin': PluginCommand(),
     'list': ListCommand(),
-    'settings': SettingsCommand()
+    'settings': SettingsCommand(),
+    'deploy': DeployCommand()
 }
 
 
