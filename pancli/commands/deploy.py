@@ -68,7 +68,7 @@ def _upload_egg(target, project_name=None, version=None, egg=None, auth=None):
 
 class DeployCommand(CommandBase):
     def add_arguments(self, parser):
-        pass
+        parser.add_argument('-p', '--project', dest='project')
 
     def run(self, args):
         tmpdir = None
@@ -82,7 +82,7 @@ class DeployCommand(CommandBase):
             password = getpass('Password:\r\n')
 
         auth = requests.auth.HTTPBasicAuth(username, password)
-        ret = _upload_egg('default', egg=egg, auth=auth)
+        ret = _upload_egg('default', egg=egg, auth=auth, project_name=args.project)
         print(ret)
 
         if tmpdir:
