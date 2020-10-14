@@ -22,7 +22,7 @@ To test a plugin:
   the generated settings module.
 """
 
-
+import logging
 import pkg_resources
 import json
 import sys
@@ -32,6 +32,8 @@ import argparse
 from pkg_resources import working_set
 
 plugin_env = pkg_resources.Environment([os.path.abspath('./plugins')])
+
+logger = logging.getLogger(__name__)
 
 
 def _pip_install(*requirements):
@@ -176,6 +178,19 @@ def load_distribution(egg_path):
     return next(pkg_resources.find_distributions(egg_path, True))
 
 
+def ensure_plugin(plugin_name):
+    logger.debug('ensure_plugin: %s', plugin_name)
+    d = working_set.resolve([pkg_resources.Requirement(plugin_name)], 
+                        plugin_env, 
+                        install_plugin)
+    logger.debug(d)
+
+
+def log_subprocess_output(pipe):
+    for line in iter(pipe.readline, b''): # b'\n'-separated lines
+        logging.info('got line from subprocess: %r', line)
+
+
 def install_plugin(plugin_name):
     print('installing requirement %s' % plugin_name)
     if isinstance(plugin_name, str):
@@ -184,12 +199,19 @@ def install_plugin(plugin_name):
              'install', str(plugin_name), '--target', './plugins']
     env = os.environ.copy()
     #pargs.append()
-    p = subprocess.Popen(pargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    #pip_stdout = subprocess.PIPE
+    pip_stdout = open('pip.log', 'wb')
+    p = subprocess.Popen(pargs, stdout=pip_stdout, stderr=subprocess.PIPE,
                          env=env,
                          encoding='UTF8')
     try:
+        #with p.stdout:
+        #    log_subprocess_output(p.stdout)
         ret = p.wait(timeout=60)
-        output = p.stdout.read()
+        if pip_stdout and pip_stdout.readable():
+            output = pip_stdout.read()
+        else:
+            output = ''
         err_output = p.stderr.read()
         new_env = pkg_resources.Environment('plugins')
         new_env.scan(['plugins'])
