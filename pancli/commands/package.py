@@ -43,22 +43,32 @@ class PackageCommand(CommandBase):
         return egg, d
 
     def add_arguments(self, parser: argparse.ArgumentParser):
-        parser.add_argument('-o', '--output')
-
+        parser.add_argument('-o', '--output', metavar='output file')
+        parser.add_argument('-d', '--dir', default='dist', metavar='output dir')
 
     def run(self, args=None):
         from scrapy.utils.python import retry_on_eintr
         from scrapy.utils.conf import get_config, closest_scrapy_cfg
 
-        output_dir = None
-        if args.output:
-            output_dir = tempfile.mkdtemp('pancli_pac')
-        try:
-            egg, d = self._build_egg(dist_dir=output_dir)
-            if args.output:
-                shutil.copy(egg, args.output)
-        finally:
-            if output_dir and os.path.exists(output_dir):
-                shutil.rmtree(output_dir)
+        output_dir = args.output
+        if not output_dir:
+            output_dir = 'dist'
         
-        print("Egg has been built: %s" % egg)
+        build_dir = tempfile.mkdtemp('pancli_pac')
+
+        output_file = None
+        try:
+            egg, d = self._build_egg(dist_dir=build_dir)
+            output_file = args.output
+            if args.output:
+                shutil.copy(egg, output_file)
+            elif args.dir:
+                if not os.path.exists(args.dir):
+                    os.makedirs(args.dir)
+                output_file = os.path.join(args.dir, os.path.basename(egg))
+                shutil.copy(egg, output_file)
+        finally:
+            if build_dir and os.path.exists(build_dir):
+                shutil.rmtree(build_dir)
+        
+        print("Egg has been built: %s" % output_file)
