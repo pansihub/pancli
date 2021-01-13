@@ -25,6 +25,7 @@ setup(
     zip_safe=False,
     description='pansihub command-line tools.',
     long_description=read_file('README.md'),
+    long_description_content_type='text/markdown',
     entry_points={
         'console_scripts': [
             'pansi = pancli.cli:main',
