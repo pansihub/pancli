@@ -1,5 +1,5 @@
 # pancli
-Pancli (also known as Pansi Cli), is a tool for running scrapy spider or interact to ScrapyDD.
+Pancli (also known as Pansi Cli), is a tool for running scrapy spider or interacting to ScrapyDD server.
 
 # install
 pancli is available on pip, you can install it by simply run:
@@ -13,7 +13,7 @@ pip install pancli
 
 run a spider is very easy by executing `pancli crawl {spider_name}`, the command is compatiable with `scrapy crawl`
 
-One special parameter which is the `-f ` parameter which specify a FIGURE file that all parameters of a spider can be writen in a simple JSON/YAML file. If you run spider verfy often, FIGURE file can save your life.
+One special and the most wonderful parameter is the `-f ` parameter, which specifies a FIGURE file in which all settings/parameters/plugins of a spider can be writen as a simple JSON/YAML file. If you run spider very often, FIGURE file can save tons of time.
 
 FIGURE fields:
 
