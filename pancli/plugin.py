@@ -198,15 +198,11 @@ def install_plugin(plugin_name):
     pargs = [sys.executable, '-m', 'pip', '--disable-pip-version-check', 
              'install', str(plugin_name), '--target', './plugins']
     env = os.environ.copy()
-    #pargs.append()
-    #pip_stdout = subprocess.PIPE
     pip_stdout = open('pip.log', 'wb')
     p = subprocess.Popen(pargs, stdout=pip_stdout, stderr=subprocess.PIPE,
                          env=env,
                          encoding='UTF8')
     try:
-        #with p.stdout:
-        #    log_subprocess_output(p.stdout)
         ret = p.wait(timeout=60)
         if pip_stdout and pip_stdout.readable():
             output = pip_stdout.read()
@@ -215,9 +211,7 @@ def install_plugin(plugin_name):
         err_output = p.stderr.read()
         new_env = pkg_resources.Environment('plugins')
         new_env.scan(['plugins'])
-        dists = new_env[plugin_name]
-        #plugin_env.scan()
-        #dists = plugin_env[plugin_name]
+        dists = new_env[str(plugin_name)]
         if ret != 0:
             sys.stderr.write('Pip install error\n')
             sys.stderr.write(err_output)
@@ -227,7 +221,7 @@ def install_plugin(plugin_name):
             sys.stdout.flush()
             return dists[0]
         else:
-            print('dist not find')
+            print('dist not found')
             return None
 
     except subprocess.TimeoutExpired:
