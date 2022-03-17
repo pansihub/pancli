@@ -15,9 +15,10 @@ def activate_egg(eggpath):
     leave unwanted side effects.
     """
     try:
-        d = next(pkg_resources.find_distributions(eggpath))
-    except StopIteration:
+        d = list(pkg_resources.find_distributions(eggpath))[0]
+    except (StopIteration, IndexError):
         raise ValueError("Unknown or corrupt egg")
+        
     d.activate()
     settings_module = d.get_entry_info('scrapy', 'settings').module_name
     os.environ.setdefault('SCRAPY_SETTINGS_MODULE', settings_module)
