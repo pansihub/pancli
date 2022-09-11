@@ -14,6 +14,10 @@ def activate_egg(eggpath):
     to activate a Scrapy egg file. Don't use it from other code as it may
     leave unwanted side effects.
     """
+
+    if not os.path.exists(eggpath):
+        raise FileNotFoundError()
+
     try:
         d = list(pkg_resources.find_distributions(eggpath))[0]
     except (StopIteration, IndexError):

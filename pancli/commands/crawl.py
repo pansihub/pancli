@@ -6,7 +6,7 @@ class CrawlCommand(CommandBase):
     def add_arguments(self, parser):
         parser.add_argument('spider', nargs='?')
         parser.add_argument('--package')
-        parser.add_argument('-s', '--set', nargs='*', dest='setting_set')
+        parser.add_argument('-s', '--set', dest='setting_set', action='append')
         parser.add_argument('-o', '--output')
         parser.add_argument('--output-format', '-t', dest='format')
         parser.add_argument('-f', '--file')
@@ -25,7 +25,11 @@ class CrawlCommand(CommandBase):
             spec = SpiderSetting.from_file(args.file)
 
         package = args.package or spec.package
-        project_settings = activate_project(package)
+        try:
+            project_settings = activate_project(package)
+        except FileNotFoundError:
+            print(f'package file {package} not found.', file=sys.stderr)
+            sys.exit(1)
 
         output_format = args.format
         output = args.output or spec.output
@@ -51,7 +55,6 @@ class CrawlCommand(CommandBase):
             argv += ['--logfile', args.logfile]
         if args.loglevel:
             argv += ['--loglevel', args.loglevel]
-
         
         # install derective plugins
         plugins_requires = spec.plugins
