@@ -8,6 +8,7 @@ class CrawlCommand(CommandBase):
         parser.add_argument('--package')
         parser.add_argument('-s', '--set', dest='setting_set', action='append')
         parser.add_argument('-o', '--output')
+        parser.add_argument('-O', '--overwrite-output', dest='overwrite_output')
         parser.add_argument('--output-format', '-t', dest='format')
         parser.add_argument('-f', '--file')
         parser.add_argument('--logfile')
@@ -33,6 +34,7 @@ class CrawlCommand(CommandBase):
 
         output_format = args.format
         output = args.output or spec.output
+        overwrite_output = args.overwrite_output
         
         spider_name = args.spider or spec.spider_name
         if not spider_name:
@@ -49,10 +51,16 @@ class CrawlCommand(CommandBase):
         
         if output:
             argv += ['-o', output]
+
+        if overwrite_output:
+            argv += ['-O', overwrite_output]
+
         if output_format:
             argv += ['-t', output_format]
+
         if args.logfile:
             argv += ['--logfile', args.logfile]
+            
         if args.loglevel:
             argv += ['--loglevel', args.loglevel]
         
