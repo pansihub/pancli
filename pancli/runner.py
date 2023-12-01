@@ -39,7 +39,7 @@ def activate_project(egg_path: str = None) -> Settings:
     :return: Settings : Settings
     """
     # add current path to sys.path, then a settings module can be loaded directly.
-        sys.path.append('')
+    sys.path.append('')
     
     if egg_path:
         LOGGER.debug('activating egg %s', egg_path)
