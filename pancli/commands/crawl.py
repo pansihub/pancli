@@ -1,3 +1,4 @@
+import os
 import sys
 from . import CommandBase
 
@@ -25,12 +26,19 @@ class CrawlCommand(CommandBase):
         if args.file:
             spec = SpiderSetting.from_file(args.file)
 
-        package = args.package or spec.package
-        try:
-            project_settings = activate_project(package)
-        except FileNotFoundError:
-            print(f'package file {package} not found.', file=sys.stderr)
-            sys.exit(1)
+        package = args.package
+        if not package:
+            package = spec.package
+        
+        if not package:
+            package = os.environ.get('PANCLI_PACKAGE')
+
+        if package:
+            try:
+                project_settings = activate_project(package)
+            except FileNotFoundError:
+                print(f'package file {package} not found.', file=sys.stderr)
+                sys.exit(1)
 
         output_format = args.format
         output = args.output or spec.output
