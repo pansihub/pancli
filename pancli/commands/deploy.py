@@ -1,4 +1,4 @@
-import errno
+
 import sys
 import os
 import glob
@@ -11,16 +11,7 @@ import requests
 from scrapy.utils.conf import get_config, closest_scrapy_cfg
 from . import CommandBase
 from .package import _create_default_setup_py
-
-
-def retry_on_eintr(function, *args, **kw):
-    """Run a function and retry it while getting EINTR errors"""
-    while True:
-        try:
-            return function(*args, **kw)
-        except IOError as e:
-            if e.errno != errno.EINTR:
-                raise
+from ..util import retry_on_eintr
 
 
 def _build_egg():

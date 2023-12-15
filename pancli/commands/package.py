@@ -6,6 +6,7 @@ import shutil
 import tempfile
 from subprocess import check_call
 from . import CommandBase
+from ..util import retry_on_eintr
 
 _SETUP_PY_TEMPLATE = """
 # Automatically created by: scrapydd
@@ -27,7 +28,6 @@ def _create_default_setup_py(**kwargs):
 
 class PackageCommand(CommandBase):
     def _build_egg(self, dist_dir=None):
-        from scrapy.utils.python import retry_on_eintr
         from scrapy.utils.conf import get_config, closest_scrapy_cfg
         closest = closest_scrapy_cfg()
         os.chdir(os.path.dirname(closest))
@@ -47,7 +47,6 @@ class PackageCommand(CommandBase):
         parser.add_argument('-d', '--dir', default='dist', metavar='output dir')
 
     def run(self, args=None):
-        from scrapy.utils.python import retry_on_eintr
         from scrapy.utils.conf import get_config, closest_scrapy_cfg
 
         output_dir = args.output
