@@ -33,12 +33,11 @@ class CrawlCommand(CommandBase):
         if not package:
             package = os.environ.get('PANCLI_PACKAGE')
 
-        if package:
-            try:
-                project_settings = activate_project(package)
-            except FileNotFoundError:
-                print(f'package file {package} not found.', file=sys.stderr)
-                sys.exit(1)
+        try:
+            project_settings = activate_project(package)
+        except FileNotFoundError:
+            print(f'package file {package} not found.', file=sys.stderr)
+            sys.exit(1)
 
         output_format = args.format
         output = args.output or spec.output
